@@ -1,0 +1,77 @@
+{
+  "name": "lerna-npm-proxy",
+  "version": "1.0.0",
+  "description": "Serve Lerna packages without publishing to a registry",
+  "license": "MIT",
+  "author": {
+    "name": "Connor White",
+    "email": "connor.bcw@gmail.com",
+    "url": "https://connorwhite.org"
+  },
+  "homepage": "https://connorwhite.org/github/lerna-npm-proxy",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bconnorwhite/lerna-npm-proxy.git"
+  },
+  "keywords": [
+    "lerna",
+    "npm",
+    "proxy",
+    "yarn",
+    "package",
+    "tar",
+    "docker"
+  ],
+  "files": [
+    "build"
+  ],
+  "main": "./build/index.js",
+  "bin": {
+    "lerna-npm-proxy": "./build/bin/index.js"
+  },
+  "scripts": {
+    "build": "bob build",
+    "commit": "bob commit",
+    "lerna-npm-proxy": "./build/bin/index.js",
+    "lint": "bob lint",
+    "release": "bob publish",
+    "test": "bob test"
+  },
+  "dependencies": {
+    "@bconnorwhite/exec": "^6.0.8",
+    "commander-version": "^2.0.0",
+    "fastify": "^3.19.0",
+    "fastify-http-proxy": "^6.0.0",
+    "npm-packlist": "^2.2.2",
+    "package-run": "^2.0.6",
+    "parse-json-object": "^2.0.1",
+    "sha": "^3.0.0",
+    "tar": "^6.1.0",
+    "which-pm-lockfile": "^1.1.1",
+    "write-dir-safe": "^1.0.1"
+  },
+  "peerDependencies": {
+    "lerna": "^4.0.0"
+  },
+  "devDependencies": {
+    "@bconnorwhite/bob": "^2.9.4",
+    "@types/mock-fs": "^4.13.1",
+    "@types/node": "^16.3.1",
+    "@types/npm-packlist": "^1.1.2",
+    "@types/pacote": "^11.1.1",
+    "@types/sha": "^3.0.1",
+    "@types/tar": "^4.0.5",
+    "mock-fs": "^5.0.0"
+  },
+  "eslintConfig": {
+    "extends": "eslint-config-bob"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "bob lint commit"
+    }
+  },
+  "npmpackagejsonlint": {
+    "extends": "npm-package-json-lint-config-bob"
+  }
+}
