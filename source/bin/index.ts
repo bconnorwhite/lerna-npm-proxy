@@ -7,7 +7,8 @@ program(__dirname)
   .description("Serve Lerna packages as an NPM proxy.")
   .option("-p --port <port>", "Port to listen on. Default: 4873")
   .option("-r --registry <registry>", "Registry to proxy from")
-  .option("-s --silent", "Prevent logging. Default: false")
+  .option("-s --silent", "Prevent all output. Default: false")
+  .option("-w --while <script>", "Script to run once server starts. Server will be killed once the script exits.")
   .action((options: Options) => {
     start(options);
   })

@@ -1,6 +1,8 @@
 import { join } from "path";
 import { tmpdir } from "os";
 import { createReadStream } from "fs";
+import { spawn } from "child_process";
+import { dim } from "chalk";
 import { fastify, FastifyInstance } from "fastify";
 import proxy from "fastify-http-proxy";
 import { list } from "./lerna-list";
@@ -17,14 +19,20 @@ export type Options = {
    */
   registry?: string;
   /**
-   * Prevent logging. Default: false.
+   * Prevent all output. Default: false.
    */
   silent?: boolean;
+  /**
+   * Script to run once server starts. Server will be killed once the script exits.
+   * This also disables server logging.
+   * NOTE: this is passed directly to `child_process.spawn`.
+   */
+  while?: string;
 };
 
 export async function start(options: Options = {}): Promise<FastifyInstance> {
   const server = fastify({
-    logger: options.silent !== true
+    logger: options.while ? false : options.silent !== true
   });
 
   return list().then(async ({ packages, error: listError }) => {
@@ -54,7 +62,7 @@ export async function start(options: Options = {}): Promise<FastifyInstance> {
           reply.send(packument);
         });
         // Get tarfile
-        server.get(tarPath, async (request, reply) => {
+        server.get(tarPath, async (_request, reply) => {
           const readStream = createReadStream(destination);
           reply.send(readStream);
         });
@@ -68,7 +76,21 @@ export async function start(options: Options = {}): Promise<FastifyInstance> {
       prefix: "/"
     });
 
-    server.listen(options.port ?? 4873);
+    await server.listen(options.port ?? 4873);
+
+    if(options.while) {
+      if(options.silent !== true) {
+        console.info(dim(`$ ${options.while}`));
+      }
+      const child = spawn(options.while, {
+        stdio: options.silent === true ? "ignore" : "inherit",
+        shell: true
+      });
+      child.on("close", () => {
+        server.close();
+      });
+    }
+
     return server;
   });
 }
