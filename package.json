@@ -1,6 +1,6 @@
 {
   "name": "lerna-npm-proxy",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Serve Lerna packages without publishing to a registry",
   "license": "MIT",
   "author": {
