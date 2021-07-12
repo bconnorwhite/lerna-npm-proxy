@@ -1,9 +1,5 @@
-import { dirname } from "path";
-import packlist from "npm-packlist";
-import tar from "tar";
+import { tarball, Packument, manifest } from "pacote";
 import { get } from "sha";
-import { Packument } from "pacote";
-import { writeDir } from "write-dir-safe";
 
 export type PackResult = {
   packument: Packument;
@@ -15,20 +11,14 @@ export type PackOptions = {
   version: string;
   directory: string;
   destination: string;
+  path?: string;
 };
 
-export async function pack({ name, version, directory, destination }: PackOptions) {
-  const files = await packlist({ path: directory });
-  const destinationDirectory = dirname(destination);
-  await writeDir(destinationDirectory);
-  await tar.create({
-    prefix: "package",
-    cwd: directory,
-    file: destination,
-    gzip: true
-  }, files);
+export async function pack({ name, version, directory, destination, path }: PackOptions) {
+  const { integrity } = await tarball.file(directory, destination);
+  const pkgJSON = await manifest(destination);
   return new Promise<PackResult>((resolve) => {
-    get(destination, (error, sha) => {
+    get(destination, (error, shasum) => {
       resolve({
         error,
         packument: {
@@ -39,12 +29,14 @@ export async function pack({ name, version, directory, destination }: PackOption
           },
           "versions": {
             [version]: {
-              name,
-              version,
-              _id: `${name}@${version}`,
+              ...pkgJSON,
+              _integrity: undefined,
+              _resolved: undefined,
+              _from: undefined,
               dist: {
-                shasum: sha,
-                tarball: `file://${destination}`
+                integrity,
+                shasum,
+                tarball: path ?? `file://${destination}`
               }
             }
           }

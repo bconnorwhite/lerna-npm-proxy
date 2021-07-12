@@ -1,5 +1,6 @@
 import { join } from "path";
 import { tmpdir } from "os";
+import { createReadStream } from "fs";
 import { fastify, FastifyInstance } from "fastify";
 import proxy from "fastify-http-proxy";
 import { list } from "./lerna-list";
@@ -32,19 +33,30 @@ export async function start(options: Options = {}): Promise<FastifyInstance> {
     } else {
       packages?.forEach(({ name, version, location }) => {
         server.log.info(`Serving ${name}`);
-        server.get(`/${name.replace("/", "%2f")}`, async (request, reply) => {
-          const destination = join(tmpdir(), `${name}-v${version}.tgz`);
+        const tarName = `${name}-v${version}.tgz`;
+        const destination = join(tmpdir(), tarName);
+        const base = `/${name.replace("/", "%2f")}`;
+        const tarPath = `${base}/${tarName}`;
+        // Get packument
+        server.get(base, async (request, reply) => {
+          server.log.info(`Packing ${destination}`);
           const { packument, error: packError } = await pack({
             name,
             version,
             directory: location,
-            destination
+            destination,
+            path: request.headers.host ? `http://${request.headers.host}${tarPath}` : undefined
           });
           if(packError) {
             server.log.error(packError);
           }
-          server.log.info(packument.versions[packument["dist-tags"].latest].dist.tarball);
+          server.log.info(`Linking ${packument.versions[packument["dist-tags"].latest].dist.tarball}`);
           reply.send(packument);
+        });
+        // Get tarfile
+        server.get(tarPath, async (request, reply) => {
+          const readStream = createReadStream(destination);
+          reply.send(readStream);
         });
       });
     }

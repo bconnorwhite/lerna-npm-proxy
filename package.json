@@ -42,13 +42,11 @@
     "commander-version": "^2.0.0",
     "fastify": "^3.19.0",
     "fastify-http-proxy": "^6.0.0",
-    "npm-packlist": "^2.2.2",
     "package-run": "^2.0.6",
+    "pacote": "^11.3.5",
     "parse-json-object": "^2.0.1",
     "sha": "^3.0.0",
-    "tar": "^6.1.0",
-    "which-pm-lockfile": "^1.1.1",
-    "write-dir-safe": "^1.0.1"
+    "which-pm-lockfile": "^1.1.1"
   },
   "peerDependencies": {
     "lerna": "^4.0.0"
