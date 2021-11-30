@@ -71,9 +71,11 @@ export async function start(options: Options = {}): Promise<FastifyInstance> {
 
     const registry = options.registry ?? (await getRegistry()).registry ?? "https://registry.npmjs.org";
     server.log.info(`Proxying ${registry}`);
+    const path = new URL(registry).pathname;
     server.register(proxy, {
       upstream: registry,
-      prefix: "/"
+      prefix: "/",
+      rewritePrefix: path.endsWith("/") ? path : `${path}/`
     });
 
     await server.listen(options.port ?? 4873);
