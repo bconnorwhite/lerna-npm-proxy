@@ -1,3 +1,12 @@
+## [1.1.1](https://github.com/bconnorwhite/lerna-npm-proxy/compare/v1.1.0...v1.1.1) (2021-11-30)
+
+
+### Bug Fixes
+
+* add support for registry prefixes ([3f1a172](https://github.com/bconnorwhite/lerna-npm-proxy/commit/3f1a172652398b16711f91106a23efc9338bbb6f))
+
+
+
 # [1.1.0](https://github.com/bconnorwhite/lerna-npm-proxy/compare/v1.0.0...v1.1.0) (2021-07-12)
 
 
