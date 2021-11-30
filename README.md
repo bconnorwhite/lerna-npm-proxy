@@ -12,9 +12,6 @@
   <a href="https://github.com/bconnorwhite/lerna-npm-proxy">
     <img alt="GitHub Stars" src="https://img.shields.io/github/stars/bconnorwhite/lerna-npm-proxy?label=Stars%20Appreciated%21&style=social">
   </a>
-  <a href="https://twitter.com/bconnorwhite">
-    <img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/bconnorwhite.svg?label=%40bconnorwhite&style=social">
-  </a>
 </div>
 
 <br />
